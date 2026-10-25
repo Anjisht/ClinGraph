@@ -1,9 +1,11 @@
-"""Admin-only document and PubMed ingestion endpoints."""
+from datetime import UTC, datetime
+from uuid import uuid4
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
+from app.audit.store import AuditStore
 from app.auth.dependencies import require_admin
 from app.core.config import Settings, get_settings
 from app.core.ids import generate_document_id
@@ -15,6 +17,7 @@ from app.ingestion.graph_extractor import extract_graph_elements_from_chunk
 from app.ingestion.ncbi_client import NCBIClient
 from app.ingestion.parser import parse_pubmed_xml
 from app.retrieval.embedder import get_embedder
+from app.schemas.audit import AuditEvent
 from app.schemas.auth import Scope
 
 router = APIRouter(prefix="/api/ingestion", tags=["ingestion"])
@@ -37,6 +40,7 @@ class IngestResponse(BaseModel):
 
 @router.post("/pubmed", response_model=IngestResponse)
 async def ingest_pubmed_endpoint(
+    request: Request,
     payload: PubMedIngestRequest,
     scope: Scope = Depends(require_admin),
     db: Session = Depends(get_db),
@@ -98,6 +102,24 @@ async def ingest_pubmed_endpoint(
                 graph_store.add_edge(edge)
             for ass in g_assertions:
                 graph_store.add_assertion(ass)
+
+    # Record append-only audit event
+    audit_store = AuditStore(db)
+    audit_store.log_event(
+        AuditEvent(
+            id=f"audit_ingest_{uuid4().hex[:12]}",
+            request_id=getattr(request.state, "request_id", f"req_{uuid4().hex[:8]}"),
+            timestamp=datetime.now(UTC).isoformat(),
+            tenant_id=scope.tenant_id,
+            user_id=scope.user_id,
+            action="ingestion",
+            policy_version=scope.permission_revision,
+            decision="allow",
+            retrieved_chunk_ids=[],
+            retrieved_doc_ids=ingested_doc_ids,
+            cache_outcome="bypass",
+        )
+    )
 
     return IngestResponse(
         status="success",

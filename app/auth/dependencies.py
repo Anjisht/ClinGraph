@@ -4,6 +4,7 @@ import jwt
 from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
+from app.auth.policy import PolicyEngine
 from app.core.config import Settings, get_settings
 from app.core.errors import AuthenticationError, AuthorizationError
 from app.schemas.auth import Scope, UserContext
@@ -54,6 +55,7 @@ def get_current_user(
 def get_current_scope(user: UserContext = Depends(get_current_user)) -> Scope:
     """Build the authorization scope from verified identity state."""
     return Scope(
+        user_id=user.user_id,
         tenant_id=user.tenant_id,
         allowed_roles=user.roles,
         allowed_groups=user.groups,
@@ -63,7 +65,14 @@ def get_current_scope(user: UserContext = Depends(get_current_user)) -> Scope:
 
 
 def require_admin(scope: Scope = Depends(get_current_scope)) -> Scope:
-    """Enforce admin-only authorization check."""
-    if not scope.is_admin:
+    """Enforce admin-only authorization check via PolicyEngine."""
+    if not PolicyEngine.is_admin(scope):
         raise AuthorizationError("Administrative privileges required for this action.")
+    return scope
+
+
+def require_auditor_or_admin(scope: Scope = Depends(get_current_scope)) -> Scope:
+    """Enforce auditor or admin authorization check via PolicyEngine."""
+    if not PolicyEngine.is_auditor(scope):
+        raise AuthorizationError("Auditor or administrative privileges required for this action.")
     return scope

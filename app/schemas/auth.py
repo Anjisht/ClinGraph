@@ -16,6 +16,7 @@ class UserContext(BaseModel):
 class Scope(BaseModel):
     """Authorization scope used for filtering all retrieval and caching paths."""
 
+    user_id: str = "anonymous"
     tenant_id: str
     allowed_roles: list[str]
     allowed_groups: list[str]

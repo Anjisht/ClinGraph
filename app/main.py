@@ -5,6 +5,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import sessionmaker
 
+from app.api.audit import router as audit_router
+from app.api.auth import router as auth_router
 from app.api.health import router as health_router
 from app.api.ingestion import router as ingestion_router
 from app.api.middleware import RequestTracingMiddleware
@@ -78,9 +80,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     # Register Routers
     app.include_router(health_router)
+    app.include_router(auth_router)
     app.include_router(query_router)
     app.include_router(ingestion_router)
     app.include_router(sources_router)
+    app.include_router(audit_router)
 
     return app
 

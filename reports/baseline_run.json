@@ -2,12 +2,12 @@
   "retrieval_recall": 1.0,
   "citation_correctness": 1.0,
   "abstention_accuracy": 1.0,
-  "avg_latency_ms": 6.18,
+  "avg_latency_ms": 5.65,
   "runs": [
     {
       "vignette_id": "vignette_001",
       "query": "What are the renal preservation effects of SGLT2 inhibitors in type 2 diabetes?",
-      "elapsed_ms": 10.95,
+      "elapsed_ms": 9.87,
       "retrieved_count": 5,
       "graph_candidates": 0,
       "expected_found": [
@@ -18,7 +18,7 @@
     {
       "vignette_id": "vignette_002",
       "query": "How do SGLT2 inhibitors compare to GLP-1 receptor agonists for heart failure hospitalization?",
-      "elapsed_ms": 4.02,
+      "elapsed_ms": 3.4,
       "retrieved_count": 5,
       "graph_candidates": 0,
       "expected_found": [
@@ -29,7 +29,7 @@
     {
       "vignette_id": "vignette_003",
       "query": "What are the surgical outcomes of laparoscopic appendectomy in astronauts during orbital spaceflight?",
-      "elapsed_ms": 3.58,
+      "elapsed_ms": 3.69,
       "retrieved_count": 5,
       "graph_candidates": 0,
       "expected_found": [],

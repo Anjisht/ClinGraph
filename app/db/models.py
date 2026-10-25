@@ -122,3 +122,49 @@ class VerificationRecordModel(Base):
     rationale = Column(Text, nullable=True)
     contradiction_details = Column(Text, nullable=True)
     created_at = Column(String(64), nullable=False)
+
+
+class AuditEventModel(Base):
+    __tablename__ = "audit_events"
+
+    id = Column(String(64), primary_key=True)
+    request_id = Column(String(64), nullable=False, index=True)
+    timestamp = Column(String(64), nullable=False, index=True)
+    tenant_id = Column(String(64), nullable=False, index=True)
+    user_id = Column(String(64), nullable=False, index=True)
+    action = Column(String(64), nullable=False, index=True)
+    policy_version = Column(Integer, nullable=False, default=1)
+    decision = Column(String(16), nullable=False, default="allow")
+    retrieved_chunk_ids_json = Column(Text, nullable=False, default="[]")
+    retrieved_doc_ids_json = Column(Text, nullable=False, default="[]")
+    cache_outcome = Column(String(16), nullable=False, default="miss")
+    selected_model_profile = Column(String(32), nullable=True)
+    latency_ms = Column(Float, nullable=False, default=0.0)
+    token_usage_json = Column(Text, nullable=True)
+    error_category = Column(String(64), nullable=True)
+
+    @property
+    def retrieved_chunk_ids(self) -> list[str]:
+        return json.loads(self.retrieved_chunk_ids_json)
+
+    @retrieved_chunk_ids.setter
+    def retrieved_chunk_ids(self, val: list[str]) -> None:
+        self.retrieved_chunk_ids_json = json.dumps(val)
+
+    @property
+    def retrieved_doc_ids(self) -> list[str]:
+        return json.loads(self.retrieved_doc_ids_json)
+
+    @retrieved_doc_ids.setter
+    def retrieved_doc_ids(self, val: list[str]) -> None:
+        self.retrieved_doc_ids_json = json.dumps(val)
+
+    @property
+    def token_usage(self) -> dict[str, int] | None:
+        if self.token_usage_json:
+            return json.loads(self.token_usage_json)
+        return None
+
+    @token_usage.setter
+    def token_usage(self, val: dict[str, int] | None) -> None:
+        self.token_usage_json = json.dumps(val) if val is not None else None

@@ -1,8 +1,10 @@
-"""Authenticated query answering endpoint."""
+import time
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 
+from app.audit.store import AuditStore
 from app.auth.dependencies import get_current_scope
 from app.core.config import Settings, get_settings
 from app.db.graph_store import get_graph_store
@@ -14,6 +16,7 @@ from app.retrieval.embedder import get_embedder
 from app.retrieval.graph import GraphRetriever
 from app.retrieval.pipeline import HybridRetrievalPipeline
 from app.retrieval.reranker import get_reranker
+from app.schemas.audit import AuditEvent
 from app.schemas.auth import Scope
 from app.schemas.query import QueryRequest, QueryResponse
 from app.verification import VerificationPipeline, get_claim_verifier
@@ -30,6 +33,7 @@ async def query_endpoint(
     settings: Settings = Depends(get_settings),
 ) -> QueryResponse:
     """Execute authenticated biomedical hybrid retrieval and evidence synthesis."""
+    start_time = time.perf_counter()
     req_id = getattr(request.state, "request_id", "req_local")
 
     # 1. Initialize retrieval infrastructure
@@ -81,5 +85,28 @@ async def query_endpoint(
         response=response,
         retrieval=retrieval_result,
     )
+
+    # 5. Record immutable append-only audit event
+    latency_ms = (time.perf_counter() - start_time) * 1000.0
+    audit_store = AuditStore(db)
+    retrieved_chunk_ids = [c.chunk.chunk_id for c in retrieval_result.candidates]
+    retrieved_doc_ids = sorted({c.chunk.document_id for c in retrieval_result.candidates})
+    now_iso = datetime.now(UTC).isoformat()
+    audit_event = AuditEvent(
+        id=f"audit_{req_id}",
+        request_id=req_id,
+        timestamp=now_iso,
+        tenant_id=scope.tenant_id,
+        user_id=scope.user_id,
+        action="query",
+        policy_version=scope.permission_revision,
+        decision="allow",
+        retrieved_chunk_ids=retrieved_chunk_ids,
+        retrieved_doc_ids=retrieved_doc_ids,
+        cache_outcome="miss",
+        selected_model_profile=settings.SMALL_MODEL_PROVIDER,
+        latency_ms=round(latency_ms, 2),
+    )
+    audit_store.log_event(audit_event)
 
     return verified_response

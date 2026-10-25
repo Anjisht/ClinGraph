@@ -2,6 +2,7 @@
 
 from sqlalchemy.orm import Session
 
+from app.auth.policy import PolicyEngine
 from app.db.models import ChunkModel, DocumentModel, VerificationRecordModel
 from app.schemas.auth import Scope
 from app.schemas.document import Chunk, Document
@@ -50,25 +51,7 @@ def _chunk_model_to_schema(model: ChunkModel) -> Chunk:
 
 def _is_chunk_authorized(chunk: ChunkModel, scope: Scope) -> bool:
     """Evaluate whether chunk satisfies authorization scope in deny-by-default fashion."""
-    # Tenant boundary
-    if chunk.tenant_id != "public" and chunk.tenant_id != scope.tenant_id:
-        return False
-
-    # Permission revision (stale permission revocation check)
-    if chunk.permission_revision > scope.permission_revision:
-        return False
-
-    # Roles check
-    chunk_roles = chunk.allowed_roles
-    if "*" not in chunk_roles and not any(r in chunk_roles for r in scope.allowed_roles):
-        return False
-
-    # Groups check (if chunk restricts by group)
-    chunk_groups = chunk.allowed_groups
-    if chunk_groups and not any(g in chunk_groups for g in scope.allowed_groups):
-        return False
-
-    return True
+    return PolicyEngine.is_chunk_authorized(chunk, scope)
 
 
 class DocumentStore:
@@ -131,14 +114,8 @@ class DocumentStore:
         if not doc_model:
             return None
 
-        # Scope validation
-        if doc_model.tenant_id != "public" and doc_model.tenant_id != scope.tenant_id:
-            return None
-        if "*" not in doc_model.allowed_roles and not any(
-            r in doc_model.allowed_roles for r in scope.allowed_roles
-        ):
-            return None
-        if doc_model.permission_revision > scope.permission_revision:
+        # Scope validation via centralized PolicyEngine
+        if not PolicyEngine.is_document_authorized(doc_model, scope):
             return None
 
         return _doc_model_to_schema(doc_model)

@@ -2,23 +2,20 @@
 
 from abc import ABC, abstractmethod
 
+from app.auth.policy import PolicyEngine
 from app.schemas.auth import Scope
 from app.schemas.graph import GraphAssertion, GraphEdge, GraphNode
 
 
 def is_graph_item_authorized(item: GraphNode | GraphEdge | GraphAssertion, scope: Scope) -> bool:
-    """Enforce deny-by-default access check for graph elements."""
-    if item.tenant_id != "public" and item.tenant_id != scope.tenant_id:
-        return False
-    if item.permission_revision > scope.permission_revision:
-        return False
-    if "*" not in item.allowed_roles and not any(
-        r in item.allowed_roles for r in scope.allowed_roles
-    ):
-        return False
-    if item.allowed_groups and not any(g in item.allowed_groups for g in scope.allowed_groups):
-        return False
-    return True
+    """Enforce deny-by-default access check for graph elements via PolicyEngine."""
+    return PolicyEngine.is_item_authorized(
+        tenant_id=item.tenant_id,
+        allowed_roles=item.allowed_roles,
+        allowed_groups=item.allowed_groups,
+        permission_revision=item.permission_revision,
+        scope=scope,
+    )
 
 
 class BaseGraphStore(ABC):
