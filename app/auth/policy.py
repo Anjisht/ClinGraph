@@ -95,6 +95,26 @@ class PolicyEngine:
         )
 
     @classmethod
+    def is_cache_entry_authorized(cls, entry: Any, scope: Scope) -> bool:
+        """Evaluate whether cache entry is accessible within caller's tenant and scope.
+
+        A cache entry contains private answers and source evidence, and must strictly
+        enforce tenant boundaries and permission revision freshness.
+        """
+        if entry is None:
+            return False
+        tenant_id = getattr(entry, "tenant_id", "private")
+        # Cached tenant entries can NEVER cross tenant boundaries
+        if tenant_id != "public" and tenant_id != scope.tenant_id:
+            if not (scope.is_admin and scope.tenant_id == "system"):
+                return False
+        # Permission revision check: caller cannot view cache requiring a newer policy revision
+        entry_revision = getattr(entry, "permission_revision", 1)
+        if entry_revision > scope.permission_revision:
+            return False
+        return True
+
+    @classmethod
     def is_audit_access_authorized(cls, record_tenant_id: str, scope: Scope) -> bool:
         """Evaluate whether caller can inspect audit events for a given tenant."""
         # Global admin/auditor

@@ -1,0 +1,146 @@
+{
+  "timestamp": "2026-10-25T13:57:49.787760+00:00",
+  "methodology": "Empirical evaluation of semantic caching similarity thresholds (0.70 - 0.98) and deterministic model routing on a fixed biomedical benchmark suite. Evaluates exact vs semantic hits, incorrect cache reuse trade-offs, latency distributions (p50/p95), and token pricing estimates.",
+  "threshold_sweep": [
+    {
+      "threshold": 0.7,
+      "total_queries": 9,
+      "cache_hits": 5,
+      "cache_misses": 4,
+      "exact_hits": 1,
+      "semantic_hits": 4,
+      "incorrect_reuses": 1,
+      "hit_rate": 0.5556,
+      "incorrect_reuse_rate": 0.2,
+      "p50_latency_ms": 1.91,
+      "p95_latency_ms": 9.55,
+      "avg_cost_per_query_usd": 7.1e-05,
+      "cost_per_1k_queries_usd": 0.0711
+    },
+    {
+      "threshold": 0.75,
+      "total_queries": 9,
+      "cache_hits": 5,
+      "cache_misses": 4,
+      "exact_hits": 1,
+      "semantic_hits": 4,
+      "incorrect_reuses": 1,
+      "hit_rate": 0.5556,
+      "incorrect_reuse_rate": 0.2,
+      "p50_latency_ms": 1.8,
+      "p95_latency_ms": 6.6,
+      "avg_cost_per_query_usd": 7.1e-05,
+      "cost_per_1k_queries_usd": 0.0711
+    },
+    {
+      "threshold": 0.8,
+      "total_queries": 9,
+      "cache_hits": 4,
+      "cache_misses": 5,
+      "exact_hits": 1,
+      "semantic_hits": 3,
+      "incorrect_reuses": 0,
+      "hit_rate": 0.4444,
+      "incorrect_reuse_rate": 0.0,
+      "p50_latency_ms": 2.55,
+      "p95_latency_ms": 5.89,
+      "avg_cost_per_query_usd": 9.7e-05,
+      "cost_per_1k_queries_usd": 0.0966
+    },
+    {
+      "threshold": 0.85,
+      "total_queries": 9,
+      "cache_hits": 4,
+      "cache_misses": 5,
+      "exact_hits": 1,
+      "semantic_hits": 3,
+      "incorrect_reuses": 0,
+      "hit_rate": 0.4444,
+      "incorrect_reuse_rate": 0.0,
+      "p50_latency_ms": 2.54,
+      "p95_latency_ms": 6.02,
+      "avg_cost_per_query_usd": 9.7e-05,
+      "cost_per_1k_queries_usd": 0.0966
+    },
+    {
+      "threshold": 0.9,
+      "total_queries": 9,
+      "cache_hits": 3,
+      "cache_misses": 6,
+      "exact_hits": 1,
+      "semantic_hits": 2,
+      "incorrect_reuses": 0,
+      "hit_rate": 0.3333,
+      "incorrect_reuse_rate": 0.0,
+      "p50_latency_ms": 3.0,
+      "p95_latency_ms": 5.82,
+      "avg_cost_per_query_usd": 0.000116,
+      "cost_per_1k_queries_usd": 0.1163
+    },
+    {
+      "threshold": 0.92,
+      "total_queries": 9,
+      "cache_hits": 3,
+      "cache_misses": 6,
+      "exact_hits": 1,
+      "semantic_hits": 2,
+      "incorrect_reuses": 0,
+      "hit_rate": 0.3333,
+      "incorrect_reuse_rate": 0.0,
+      "p50_latency_ms": 3.11,
+      "p95_latency_ms": 5.96,
+      "avg_cost_per_query_usd": 0.000116,
+      "cost_per_1k_queries_usd": 0.1163
+    },
+    {
+      "threshold": 0.95,
+      "total_queries": 9,
+      "cache_hits": 1,
+      "cache_misses": 8,
+      "exact_hits": 1,
+      "semantic_hits": 0,
+      "incorrect_reuses": 0,
+      "hit_rate": 0.1111,
+      "incorrect_reuse_rate": 0.0,
+      "p50_latency_ms": 3.2,
+      "p95_latency_ms": 6.16,
+      "avg_cost_per_query_usd": 0.000156,
+      "cost_per_1k_queries_usd": 0.1563
+    },
+    {
+      "threshold": 0.98,
+      "total_queries": 9,
+      "cache_hits": 1,
+      "cache_misses": 8,
+      "exact_hits": 1,
+      "semantic_hits": 0,
+      "incorrect_reuses": 0,
+      "hit_rate": 0.1111,
+      "incorrect_reuse_rate": 0.0,
+      "p50_latency_ms": 3.31,
+      "p95_latency_ms": 5.87,
+      "avg_cost_per_query_usd": 0.000156,
+      "cost_per_1k_queries_usd": 0.1563
+    }
+  ],
+  "routing_evaluation": {
+    "total_queries": 9,
+    "distribution": {
+      "small_count": 7,
+      "small_ratio": 0.7778,
+      "large_count": 2,
+      "large_ratio": 0.2222
+    },
+    "rationales": {
+      "standard_single_hop_query": 7,
+      "comparative_query_synthesis": 2
+    },
+    "cost_comparison": {
+      "adaptive_routing_avg_cost_usd": 0.000902,
+      "adaptive_routing_cost_per_1k_usd": 0.902,
+      "all_small_baseline_cost_per_1k_usd": 0.3746,
+      "all_large_baseline_cost_per_1k_usd": 2.8447,
+      "cost_savings_vs_all_large_percent": 68.29
+    }
+  }
+}

@@ -18,8 +18,8 @@ install:
 	python -m uv pip install -e ".[dev,ui,graph,cache]"
 
 lint:
-	python -m ruff check app tests configs
-	python -m ruff format --check app tests configs
+	python -m ruff check app tests configs scripts
+	python -m ruff format --check app tests configs scripts
 
 test:
 	python -m pytest

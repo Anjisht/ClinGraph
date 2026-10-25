@@ -361,3 +361,55 @@ def test_audit_endpoint_security_and_redaction(test_settings: Settings):
     assert resp_super.status_code == 200
     metrics_data = resp_super.json()
     assert "total_queries" in metrics_data
+
+
+def test_cache_cross_tenant_isolation_adversarial(test_settings: Settings):
+    """Adversarial test: verify cached private responses cannot leak across tenant boundaries."""
+    from app.db.graph_store import get_graph_store
+
+    test_settings.SEMANTIC_CACHE_ENABLED = True
+    app = create_app(settings=test_settings)
+    client = TestClient(app)
+
+    db_gen = app.dependency_overrides[get_db]()
+    session = next(db_gen)
+    try:
+        graph_store = get_graph_store()
+        graph_store.clear()
+        store = DocumentStore(session)
+        _seed_multitenant_corpus(store, graph_store)
+    finally:
+        db_gen.close()
+
+    token_alice = create_jwt_token(SEEDED_DEMO_USERS["dr_alice"], test_settings)  # hospital_a
+    token_bob = create_jwt_token(SEEDED_DEMO_USERS["dr_bob"], test_settings)  # hospital_b
+
+    # Alice queries confidential protocol for hospital_a
+    q = "What is the secret protocol for acute heart failure stabilization?"
+    resp_alice = client.post(
+        "/api/query",
+        headers={"Authorization": f"Bearer {token_alice}"},
+        json={"query": q},
+    )
+    assert resp_alice.status_code == 200
+    data_alice = resp_alice.json()
+    assert data_alice["abstained"] is False
+    # Verified hospital_a content was retrieved
+    assert any("chunk_hosp_a_secret" in str(claim) for claim in data_alice["claims"])
+
+    # Now Dr. Bob from hospital_b submits the EXACT SAME query
+    resp_bob = client.post(
+        "/api/query",
+        headers={"Authorization": f"Bearer {token_bob}"},
+        json={"query": q},
+    )
+    assert resp_bob.status_code == 200
+    data_bob = resp_bob.json()
+
+    # Bob MUST NOT receive a cache hit from Alice's query
+    assert data_bob["metadata"]["cache"]["outcome"] != "hit"
+    # Bob MUST NOT see Hospital A's secret chunk cited anywhere in claims or citations!
+    for claim in data_bob["claims"]:
+        for cit in claim.get("citations", []):
+            assert cit["chunk_id"] != "chunk_hosp_a_secret"
+            assert cit["document_id"] != "doc_hosp_a_1"

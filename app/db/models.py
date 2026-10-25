@@ -168,3 +168,66 @@ class AuditEventModel(Base):
     @token_usage.setter
     def token_usage(self, val: dict[str, int] | None) -> None:
         self.token_usage_json = json.dumps(val) if val is not None else None
+
+
+class SemanticCacheModel(Base):
+    __tablename__ = "semantic_cache"
+
+    id = Column(String(64), primary_key=True)
+    tenant_id = Column(String(64), nullable=False, index=True)
+    scope_fingerprint = Column(String(64), nullable=False, index=True)
+    permission_revision = Column(Integer, nullable=False, default=1)
+    corpus_version_fingerprint = Column(String(64), nullable=True)
+    normalized_query = Column(Text, nullable=False, index=True)
+    query_text = Column(Text, nullable=False)
+    embedding_json = Column(Text, nullable=False)
+    source_doc_ids_json = Column(Text, nullable=False, default="[]")
+    source_chunk_ids_json = Column(Text, nullable=False, default="[]")
+    source_doc_versions_json = Column(Text, nullable=False, default="{}")
+    model_id = Column(String(64), nullable=False)
+    prompt_version = Column(String(32), nullable=False, default="v1")
+    verifier_version = Column(String(32), nullable=False, default="v1")
+    verification_status = Column(String(32), nullable=False, default="verified")
+    response_json = Column(Text, nullable=False)
+    created_at = Column(String(64), nullable=False)
+    expires_at = Column(String(64), nullable=False, index=True)
+
+    @property
+    def embedding(self) -> list[float]:
+        return json.loads(self.embedding_json)
+
+    @embedding.setter
+    def embedding(self, val: list[float]) -> None:
+        self.embedding_json = json.dumps(val)
+
+    @property
+    def source_doc_ids(self) -> list[str]:
+        return json.loads(self.source_doc_ids_json)
+
+    @source_doc_ids.setter
+    def source_doc_ids(self, val: list[str]) -> None:
+        self.source_doc_ids_json = json.dumps(val)
+
+    @property
+    def source_chunk_ids(self) -> list[str]:
+        return json.loads(self.source_chunk_ids_json)
+
+    @source_chunk_ids.setter
+    def source_chunk_ids(self, val: list[str]) -> None:
+        self.source_chunk_ids_json = json.dumps(val)
+
+    @property
+    def source_doc_versions(self) -> dict[str, int]:
+        return json.loads(self.source_doc_versions_json)
+
+    @source_doc_versions.setter
+    def source_doc_versions(self, val: dict[str, int]) -> None:
+        self.source_doc_versions_json = json.dumps(val)
+
+    @property
+    def response_data(self) -> dict:
+        return json.loads(self.response_json)
+
+    @response_data.setter
+    def response_data(self, val: dict) -> None:
+        self.response_json = json.dumps(val)

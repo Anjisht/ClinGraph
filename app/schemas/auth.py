@@ -18,7 +18,7 @@ class Scope(BaseModel):
 
     user_id: str = "anonymous"
     tenant_id: str
-    allowed_roles: list[str]
-    allowed_groups: list[str]
-    permission_revision: int
+    allowed_roles: list[str] = Field(default_factory=lambda: ["*"])
+    allowed_groups: list[str] = Field(default_factory=list)
+    permission_revision: int = 1
     is_admin: bool = False
