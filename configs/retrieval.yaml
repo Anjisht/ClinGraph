@@ -1,0 +1,30 @@
+dense:
+  model_name: "NeuML/pubmedbert-base-embeddings"
+  dimension: 768
+  similarity_metric: "cosine"
+  top_k: 20
+
+sparse:
+  bm25_k1: 1.5
+  bm25_b: 0.75
+  top_k: 20
+
+fusion:
+  algorithm: "rrf"
+  rrf_k: 60
+  dense_weight: 1.0
+  sparse_weight: 1.0
+  graph_weight: 0.8
+  fused_top_k: 15
+
+reranker:
+  enabled: true
+  model_name: "cross-encoder/ms-marco-MiniLM-L-6-v2"
+  top_k: 5
+  batch_size: 16
+
+graph:
+  enabled: false
+  max_depth: 2
+  max_neighbors: 10
+  min_confidence: 0.7

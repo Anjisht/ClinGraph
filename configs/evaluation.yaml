@@ -1,0 +1,25 @@
+dataset:
+  name: "synthetic_vignettes"
+  samples_path: "data/samples/vignettes.json"
+
+metrics:
+  retrieval:
+    - "recall_at_k"
+    - "mrr"
+  citations:
+    - "citation_correctness"
+    - "unsupported_claim_rate"
+    - "conflict_detection_rate"
+  safety:
+    - "abstention_precision"
+    - "unauthorized_leak_rate"
+  efficiency:
+    - "latency_p50_ms"
+    - "latency_p95_ms"
+    - "cost_per_query"
+    - "cache_hit_rate"
+
+thresholds:
+  min_citation_correctness: 0.90
+  max_unsupported_claim_rate: 0.05
+  max_cross_tenant_leak_rate: 0.00

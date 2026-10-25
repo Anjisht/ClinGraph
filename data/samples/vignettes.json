@@ -1,0 +1,23 @@
+[
+  {
+    "id": "vignette_001",
+    "query": "What are the renal preservation effects of SGLT2 inhibitors in type 2 diabetes?",
+    "expected_pmids": ["PMID:31234567"],
+    "expected_keywords": ["eGFR", "renal preservation", "kidney"],
+    "should_abstain": false
+  },
+  {
+    "id": "vignette_002",
+    "query": "How do SGLT2 inhibitors compare to GLP-1 receptor agonists for heart failure hospitalization?",
+    "expected_pmids": ["PMID:32345678"],
+    "expected_keywords": ["heart failure", "reduction", "hospitalization"],
+    "should_abstain": false
+  },
+  {
+    "id": "vignette_003",
+    "query": "What are the surgical outcomes of laparoscopic appendectomy in astronauts during orbital spaceflight?",
+    "expected_pmids": [],
+    "expected_keywords": [],
+    "should_abstain": true
+  }
+]

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2024//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_240101.dtd">
+<PubmedArticleSet>
+  <PubmedArticle>
+    <MedlineCitation Status="MEDLINE" Owner="NLM">
+      <PMID Version="1">31234567</PMID>
+      <Article PubModel="Print-Electronic">
+        <Journal>
+          <JournalIssue CitedMedium="Internet">
+            <PubDate>
+              <Year>2023</Year>
+              <Month>05</Month>
+              <Day>12</Day>
+            </PubDate>
+          </JournalIssue>
+          <Title>Journal of Clinical Endocrinology</Title>
+        </Journal>
+        <ArticleTitle>Efficacy and Renal Safety of SGLT2 Inhibitors in Type 2 Diabetes: A Randomized Controlled Trial</ArticleTitle>
+        <AuthorList CompleteYN="Y">
+          <Author ValidYN="Y">
+            <LastName>Smith</LastName>
+            <ForeName>John A</ForeName>
+            <Initials>JA</Initials>
+          </Author>
+          <Author ValidYN="Y">
+            <LastName>Patel</LastName>
+            <ForeName>Priya</ForeName>
+            <Initials>P</Initials>
+          </Author>
+        </AuthorList>
+        <Abstract>
+          <AbstractText Label="BACKGROUND" NlmCategory="BACKGROUND">Sodium-glucose cotransporter 2 (SGLT2) inhibitors reduce cardiovascular events in patients with type 2 diabetes mellitus.</AbstractText>
+          <AbstractText Label="METHODS" NlmCategory="METHODS">We conducted a double-blind, randomized, placebo-controlled trial involving 1,200 adult patients with type 2 diabetes and mild chronic kidney disease.</AbstractText>
+          <AbstractText Label="RESULTS" NlmCategory="RESULTS">SGLT2 inhibition significantly slowed the decline of estimated glomerular filtration rate (eGFR) by 1.8 mL/min/1.73 m2 per year compared to placebo (p &lt; 0.001). Adverse events including ketoacidosis were rare but observed in 0.4% of participants.</AbstractText>
+          <AbstractText Label="CONCLUSIONS" NlmCategory="CONCLUSIONS">In adults with type 2 diabetes and mild renal impairment, SGLT2 inhibitors provide renal preservation and glycemic improvement without excess serious adverse events.</AbstractText>
+        </Abstract>
+      </Article>
+    </MedlineCitation>
+  </PubmedArticle>
+  <PubmedArticle>
+    <MedlineCitation Status="MEDLINE" Owner="NLM">
+      <PMID Version="1">32345678</PMID>
+      <Article PubModel="Print-Electronic">
+        <Journal>
+          <JournalIssue CitedMedium="Internet">
+            <PubDate>
+              <Year>2023</Year>
+              <Month>08</Month>
+              <Day>20</Day>
+            </PubDate>
+          </JournalIssue>
+          <Title>Cardiovascular Medicine Journal</Title>
+        </Journal>
+        <ArticleTitle>GLP-1 Receptor Agonists versus SGLT2 Inhibitors for Heart Failure Outcomes</ArticleTitle>
+        <AuthorList CompleteYN="Y">
+          <Author ValidYN="Y">
+            <LastName>Garcia</LastName>
+            <ForeName>Elena</ForeName>
+            <Initials>E</Initials>
+          </Author>
+        </AuthorList>
+        <Abstract>
+          <AbstractText Label="BACKGROUND">Both GLP-1 receptor agonists and SGLT2 inhibitors improve glycemic control, but comparative cardiovascular outcomes remain an area of clinical inquiry.</AbstractText>
+          <AbstractText Label="RESULTS">SGLT2 inhibitors exhibited a 28% reduction in hospitalization for heart failure compared with GLP-1 receptor agonists (HR 0.72, 95% CI 0.61-0.85). Conversely, GLP-1 receptor agonists showed greater total weight reduction.</AbstractText>
+          <AbstractText Label="CONCLUSIONS">For heart failure risk reduction, SGLT2 inhibitors demonstrate superior protection compared to GLP-1 receptor agonists in diabetic cohorts.</AbstractText>
+        </Abstract>
+      </Article>
+    </MedlineCitation>
+  </PubmedArticle>
+</PubmedArticleSet>
