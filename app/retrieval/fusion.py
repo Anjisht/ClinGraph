@@ -6,12 +6,14 @@ from app.schemas.retrieval import ScoredChunk
 def reciprocal_rank_fusion(
     dense_results: list[ScoredChunk],
     sparse_results: list[ScoredChunk],
+    graph_results: list[ScoredChunk] | None = None,
     rrf_k: int = 60,
     dense_weight: float = 1.0,
     sparse_weight: float = 1.0,
+    graph_weight: float = 0.8,
     fused_top_k: int = 15,
 ) -> list[ScoredChunk]:
-    """Fuse dense and sparse ranked lists using Reciprocal Rank Fusion."""
+    """Fuse dense, sparse, and graph ranked lists using Reciprocal Rank Fusion."""
     combined_scores: dict[str, float] = {}
     chunk_map: dict[str, ScoredChunk] = {}
     method_scores_map: dict[str, dict[str, float]] = {}
@@ -40,6 +42,20 @@ def reciprocal_rank_fusion(
             method_scores_map[cid] = {}
         method_scores_map[cid]["sparse"] = item.score
         method_scores_map[cid]["sparse_rank"] = float(item.rank)
+
+    # Score graph items if provided
+    if graph_results:
+        for item in graph_results:
+            cid = item.chunk.chunk_id
+            if cid not in chunk_map:
+                chunk_map[cid] = item
+            score = graph_weight / (rrf_k + item.rank)
+            combined_scores[cid] = combined_scores.get(cid, 0.0) + score
+
+            if cid not in method_scores_map:
+                method_scores_map[cid] = {}
+            method_scores_map[cid]["graph"] = item.score
+            method_scores_map[cid]["graph_rank"] = float(item.rank)
 
     # Sort descending by fused score
     sorted_chunk_ids = sorted(

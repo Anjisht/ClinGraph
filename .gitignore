@@ -52,3 +52,4 @@ data/raw/
 data/cache/
 reports/*.tmp
 *.sqlite3
+*.db

@@ -7,9 +7,11 @@ from sqlalchemy.orm import Session
 from app.auth.dependencies import require_admin
 from app.core.config import Settings, get_settings
 from app.core.ids import generate_document_id
+from app.db.graph_store import get_graph_store
 from app.db.session import get_db
 from app.db.store import DocumentStore
 from app.ingestion.chunker import chunk_document
+from app.ingestion.graph_extractor import extract_graph_elements_from_chunk
 from app.ingestion.ncbi_client import NCBIClient
 from app.ingestion.parser import parse_pubmed_xml
 from app.retrieval.embedder import get_embedder
@@ -65,6 +67,7 @@ async def ingest_pubmed_endpoint(
 
     store = DocumentStore(db)
     embedder = get_embedder(model_name=settings.EMBEDDING_MODEL)
+    graph_store = get_graph_store()
 
     ingested_doc_ids: list[str] = []
     total_chunks = 0
@@ -85,6 +88,16 @@ async def ingest_pubmed_endpoint(
         store.save_document(full_doc, chunks)
         ingested_doc_ids.append(doc_id)
         total_chunks += len(chunks)
+
+        # Extract and populate evidence graph elements
+        for ch in chunks:
+            g_nodes, g_edges, g_assertions = extract_graph_elements_from_chunk(ch, full_doc)
+            for node in g_nodes:
+                graph_store.add_node(node)
+            for edge in g_edges:
+                graph_store.add_edge(edge)
+            for ass in g_assertions:
+                graph_store.add_assertion(ass)
 
     return IngestResponse(
         status="success",

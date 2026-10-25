@@ -2,6 +2,7 @@
 
 from app.schemas.auth import Scope, UserContext
 from app.schemas.document import Chunk, ChunkCreate, Document, DocumentCreate
+from app.schemas.graph import GraphAssertion, GraphEdge, GraphNode, NodeType, RelationType
 from app.schemas.query import Citation, Claim, Conflict, QueryRequest, QueryResponse
 from app.schemas.retrieval import RetrievalMethod, RetrievalMetrics, RetrievalResult, ScoredChunk
 
@@ -12,6 +13,11 @@ __all__ = [
     "DocumentCreate",
     "Chunk",
     "ChunkCreate",
+    "GraphNode",
+    "GraphEdge",
+    "GraphAssertion",
+    "NodeType",
+    "RelationType",
     "ScoredChunk",
     "RetrievalResult",
     "RetrievalMethod",
