@@ -1,0 +1,182 @@
+{
+  "timestamp": "2026-10-25T14:04:46.585198+00:00",
+  "total_vignettes": 3,
+  "ablations": [
+    {
+      "ablation_id": 1,
+      "name": "1. Dense-only baseline",
+      "config": {
+        "retrieval_mode": "dense_only",
+        "use_verification": false,
+        "use_routing": false,
+        "use_cache": false
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 2.68,
+        "cost_per_1k_usd": 0.3417,
+        "model_routing": {
+          "small": 3,
+          "large": 0
+        }
+      }
+    },
+    {
+      "ablation_id": 2,
+      "name": "2. BM25-only baseline",
+      "config": {
+        "retrieval_mode": "bm25_only",
+        "use_verification": false,
+        "use_routing": false,
+        "use_cache": false
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 2.21,
+        "cost_per_1k_usd": 0.3127,
+        "model_routing": {
+          "small": 3,
+          "large": 0
+        }
+      }
+    },
+    {
+      "ablation_id": 3,
+      "name": "3. Dense + BM25 + RRF",
+      "config": {
+        "retrieval_mode": "dense_bm25_rrf",
+        "use_verification": false,
+        "use_routing": false,
+        "use_cache": false
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 3.87,
+        "cost_per_1k_usd": 0.3417,
+        "model_routing": {
+          "small": 3,
+          "large": 0
+        }
+      }
+    },
+    {
+      "ablation_id": 4,
+      "name": "4. Hybrid + reranking",
+      "config": {
+        "retrieval_mode": "hybrid_rerank",
+        "use_verification": false,
+        "use_routing": false,
+        "use_cache": false
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 3.75,
+        "cost_per_1k_usd": 0.3337,
+        "model_routing": {
+          "small": 3,
+          "large": 0
+        }
+      }
+    },
+    {
+      "ablation_id": 5,
+      "name": "5. Hybrid + reranking + graph retrieval",
+      "config": {
+        "retrieval_mode": "hybrid_rerank_graph",
+        "use_verification": false,
+        "use_routing": false,
+        "use_cache": false
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 3.71,
+        "cost_per_1k_usd": 0.3337,
+        "model_routing": {
+          "small": 3,
+          "large": 0
+        }
+      }
+    },
+    {
+      "ablation_id": 6,
+      "name": "6. Previous best + claim verification",
+      "config": {
+        "retrieval_mode": "hybrid_rerank_graph",
+        "use_verification": true,
+        "use_routing": false,
+        "use_cache": false
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 10.58,
+        "cost_per_1k_usd": 0.3337,
+        "model_routing": {
+          "small": 3,
+          "large": 0
+        }
+      }
+    },
+    {
+      "ablation_id": 7,
+      "name": "7. Previous best + model routing",
+      "config": {
+        "retrieval_mode": "hybrid_rerank_graph",
+        "use_verification": true,
+        "use_routing": true,
+        "use_cache": false
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 9.83,
+        "cost_per_1k_usd": 1.0217,
+        "model_routing": {
+          "small": 2,
+          "large": 1
+        }
+      }
+    },
+    {
+      "ablation_id": 8,
+      "name": "8. Previous best + semantic cache",
+      "config": {
+        "retrieval_mode": "all_features",
+        "use_verification": true,
+        "use_routing": true,
+        "use_cache": true
+      },
+      "metrics": {
+        "retrieval_recall": 1.0,
+        "citation_correctness": 1.0,
+        "abstention_accuracy": 1.0,
+        "cache_hit_rate": 0.0,
+        "avg_latency_ms": 26.97,
+        "cost_per_1k_usd": 1.0217,
+        "model_routing": {
+          "small": 2,
+          "large": 1
+        }
+      }
+    }
+  ]
+}
