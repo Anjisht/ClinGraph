@@ -99,15 +99,21 @@ class FakeLLMClient(BaseLLMClient):
                 }
             )
 
-        # Generate claims referencing the real chunk IDs in the prompt
+        # Generate grounded claims referencing real chunk IDs and passage text
         claims: list[dict] = []
-        for idx, cid in enumerate(chunk_ids[:3]):
+        for cid in chunk_ids[:3]:
+            pattern = rf"\[CHUNK_ID:\s*{re.escape(cid)}\][^\n]*\n([^\n]+)"
+            match = re.search(pattern, prompt)
+            if match:
+                passage_line = match.group(1).strip()
+                first_sent = passage_line.split(".")[0].strip()
+                claim_text = f"{first_sent}." if first_sent else passage_line
+            else:
+                claim_text = f"Evidence from {cid} demonstrates clinical findings."
+
             claims.append(
                 {
-                    "claim_text": (
-                        f"Evidence passage {idx + 1} provides key findings "
-                        "related to the research question."
-                    ),
+                    "claim_text": claim_text,
                     "status": "supported",
                     "chunk_ids": [cid],
                     "limitations": [],

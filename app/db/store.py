@@ -2,9 +2,10 @@
 
 from sqlalchemy.orm import Session
 
-from app.db.models import ChunkModel, DocumentModel
+from app.db.models import ChunkModel, DocumentModel, VerificationRecordModel
 from app.schemas.auth import Scope
 from app.schemas.document import Chunk, Document
+from app.schemas.verification import ClaimVerificationResult
 
 
 def _doc_model_to_schema(model: DocumentModel) -> Document:
@@ -173,3 +174,33 @@ class DocumentStore:
 
     def count_chunks(self) -> int:
         return self.session.query(ChunkModel).count()
+
+    def save_verification_records(
+        self, request_id: str, results: list[ClaimVerificationResult], timestamp: str
+    ) -> None:
+        """Persist verification outcomes for audit and evaluation tracing."""
+        for r in results:
+            rec_id = f"ver_{request_id}_{r.claim_index}_{r.chunk_id or 'none'}"
+            rec = VerificationRecordModel(
+                id=rec_id,
+                request_id=request_id,
+                claim_index=r.claim_index,
+                claim_text=r.claim_text,
+                chunk_id=r.chunk_id,
+                status=r.status,
+                confidence=r.confidence,
+                rationale=r.rationale,
+                contradiction_details=r.contradiction_details,
+                created_at=timestamp,
+            )
+            self.session.merge(rec)
+        self.session.commit()
+
+    def get_verification_records(self, request_id: str) -> list[VerificationRecordModel]:
+        """Fetch saved verification records for a request ID."""
+        return (
+            self.session.query(VerificationRecordModel)
+            .filter_by(request_id=request_id)
+            .order_by(VerificationRecordModel.claim_index)
+            .all()
+        )

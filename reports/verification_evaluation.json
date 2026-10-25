@@ -1,0 +1,105 @@
+{
+  "total_samples": 8,
+  "overall_accuracy": 1.0,
+  "macro_f1": 1.0,
+  "per_class_metrics": {
+    "supported": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 2
+    },
+    "partially_supported": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 2
+    },
+    "contradicted": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 2
+    },
+    "unverified": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 2
+    }
+  },
+  "sample_predictions": [
+    {
+      "id": "sample_001",
+      "category": "renal_preservation",
+      "expected": "supported",
+      "predicted": "supported",
+      "confidence": 0.95,
+      "is_correct": true,
+      "rationale": "Passage directly corroborates claim with 90% concept alignment."
+    },
+    {
+      "id": "sample_002",
+      "category": "cardiovascular",
+      "expected": "supported",
+      "predicted": "supported",
+      "confidence": 0.95,
+      "is_correct": true,
+      "rationale": "Passage directly corroborates claim with 71% concept alignment."
+    },
+    {
+      "id": "sample_003",
+      "category": "cardiovascular",
+      "expected": "partially_supported",
+      "predicted": "partially_supported",
+      "confidence": 0.85,
+      "is_correct": true,
+      "rationale": "Passage provides contextual grounding with noted evidentiary caveats or subgroup limitations."
+    },
+    {
+      "id": "sample_004",
+      "category": "neuropathy",
+      "expected": "partially_supported",
+      "predicted": "partially_supported",
+      "confidence": 0.85,
+      "is_correct": true,
+      "rationale": "Passage provides contextual grounding with noted evidentiary caveats or subgroup limitations."
+    },
+    {
+      "id": "sample_005",
+      "category": "space_surgery",
+      "expected": "contradicted",
+      "predicted": "contradicted",
+      "confidence": 0.95,
+      "is_correct": true,
+      "rationale": "Passage directly contradicts the clinical direction of the claim."
+    },
+    {
+      "id": "sample_006",
+      "category": "nephrology",
+      "expected": "contradicted",
+      "predicted": "contradicted",
+      "confidence": 0.95,
+      "is_correct": true,
+      "rationale": "Passage directly contradicts the clinical direction of the claim."
+    },
+    {
+      "id": "sample_007",
+      "category": "genetics",
+      "expected": "unverified",
+      "predicted": "unverified",
+      "confidence": 0.9,
+      "is_correct": true,
+      "rationale": "Insufficient evidence overlap: only 2 of 11 key claim terms found in passage."
+    },
+    {
+      "id": "sample_008",
+      "category": "neurology",
+      "expected": "unverified",
+      "predicted": "unverified",
+      "confidence": 0.9,
+      "is_correct": true,
+      "rationale": "Insufficient evidence overlap: only 0 of 8 key claim terms found in passage."
+    }
+  ]
+}

@@ -16,6 +16,7 @@ from app.retrieval.pipeline import HybridRetrievalPipeline
 from app.retrieval.reranker import get_reranker
 from app.schemas.auth import Scope
 from app.schemas.query import QueryRequest, QueryResponse
+from app.verification import VerificationPipeline, get_claim_verifier
 
 router = APIRouter(prefix="/api", tags=["query"])
 
@@ -68,4 +69,17 @@ async def query_endpoint(
         retrieval=retrieval_result,
     )
 
-    return response
+    # 4. Verify claims, detect conflicts, enforce abstention, and persist audit records
+    verifier = get_claim_verifier(settings=settings, llm_client=llm_client)
+    verification_pipe = VerificationPipeline(
+        verifier=verifier,
+        doc_store=store,
+    )
+    verified_response = verification_pipe.verify_response(
+        request_id=req_id,
+        query=query_req.query,
+        response=response,
+        retrieval=retrieval_result,
+    )
+
+    return verified_response

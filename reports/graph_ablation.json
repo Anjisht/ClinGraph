@@ -1,17 +1,17 @@
 {
-  "timestamp": "2026-10-25T13:12:44Z",
+  "timestamp": "2026-10-25T13:27:25Z",
   "vignettes_count": 3,
   "variants": {
     "hybrid_only": {
       "retrieval_recall": 1.0,
       "citation_correctness": 1.0,
       "abstention_accuracy": 1.0,
-      "avg_latency_ms": 5.06,
+      "avg_latency_ms": 6.18,
       "runs": [
         {
           "vignette_id": "vignette_001",
           "query": "What are the renal preservation effects of SGLT2 inhibitors in type 2 diabetes?",
-          "elapsed_ms": 9.14,
+          "elapsed_ms": 10.95,
           "retrieved_count": 5,
           "graph_candidates": 0,
           "expected_found": [
@@ -22,7 +22,7 @@
         {
           "vignette_id": "vignette_002",
           "query": "How do SGLT2 inhibitors compare to GLP-1 receptor agonists for heart failure hospitalization?",
-          "elapsed_ms": 3.09,
+          "elapsed_ms": 4.02,
           "retrieved_count": 5,
           "graph_candidates": 0,
           "expected_found": [
@@ -33,7 +33,7 @@
         {
           "vignette_id": "vignette_003",
           "query": "What are the surgical outcomes of laparoscopic appendectomy in astronauts during orbital spaceflight?",
-          "elapsed_ms": 2.94,
+          "elapsed_ms": 3.58,
           "retrieved_count": 5,
           "graph_candidates": 0,
           "expected_found": [],
@@ -45,12 +45,12 @@
       "retrieval_recall": 1.0,
       "citation_correctness": 1.0,
       "abstention_accuracy": 1.0,
-      "avg_latency_ms": 2.99,
+      "avg_latency_ms": 3.56,
       "runs": [
         {
           "vignette_id": "vignette_001",
           "query": "What are the renal preservation effects of SGLT2 inhibitors in type 2 diabetes?",
-          "elapsed_ms": 3.14,
+          "elapsed_ms": 3.87,
           "retrieved_count": 5,
           "graph_candidates": 0,
           "expected_found": [
@@ -61,7 +61,7 @@
         {
           "vignette_id": "vignette_002",
           "query": "How do SGLT2 inhibitors compare to GLP-1 receptor agonists for heart failure hospitalization?",
-          "elapsed_ms": 2.94,
+          "elapsed_ms": 3.51,
           "retrieved_count": 5,
           "graph_candidates": 0,
           "expected_found": [
@@ -72,7 +72,7 @@
         {
           "vignette_id": "vignette_003",
           "query": "What are the surgical outcomes of laparoscopic appendectomy in astronauts during orbital spaceflight?",
-          "elapsed_ms": 2.89,
+          "elapsed_ms": 3.28,
           "retrieved_count": 5,
           "graph_candidates": 0,
           "expected_found": [],

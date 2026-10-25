@@ -2,7 +2,7 @@
 
 import json
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -107,3 +107,18 @@ class ChunkModel(Base):
     @allowed_groups.setter
     def allowed_groups(self, val: list[str]) -> None:
         self.allowed_groups_json = json.dumps(val)
+
+
+class VerificationRecordModel(Base):
+    __tablename__ = "verification_records"
+
+    id = Column(String(64), primary_key=True)
+    request_id = Column(String(64), nullable=False, index=True)
+    claim_index = Column(Integer, nullable=False)
+    claim_text = Column(Text, nullable=False)
+    chunk_id = Column(String(64), nullable=True, index=True)
+    status = Column(String(32), nullable=False)
+    confidence = Column(Float, nullable=False, default=1.0)
+    rationale = Column(Text, nullable=True)
+    contradiction_details = Column(Text, nullable=True)
+    created_at = Column(String(64), nullable=False)

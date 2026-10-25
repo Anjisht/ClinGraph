@@ -1,0 +1,58 @@
+[
+  {
+    "id": "sample_001",
+    "claim": "SGLT2 inhibitors significantly reduce the progression of chronic kidney disease in type 2 diabetes.",
+    "passage": "In patients with type 2 diabetes and chronic kidney disease, SGLT2 inhibitors significantly reduced the risk of kidney disease progression and renal-related mortality.",
+    "expected_status": "supported",
+    "category": "renal_preservation"
+  },
+  {
+    "id": "sample_002",
+    "claim": "Empagliflozin reduced hospitalization for heart failure compared with placebo.",
+    "passage": "Empagliflozin administration resulted in a 35% relative risk reduction in hospitalization for heart failure in patients with established cardiovascular disease.",
+    "expected_status": "supported",
+    "category": "cardiovascular"
+  },
+  {
+    "id": "sample_003",
+    "claim": "Metformin prevents all cardiovascular complications in prediabetes patients across global cohorts.",
+    "passage": "Metformin showed a modest trend towards reducing cardiovascular risk in a preliminary subgroup analysis of prediabetes patients, though long-term evidence remains limited.",
+    "expected_status": "partially_supported",
+    "category": "cardiovascular"
+  },
+  {
+    "id": "sample_004",
+    "claim": "GLP-1 receptor agonists eliminate diabetic neuropathy symptoms.",
+    "passage": "GLP-1 receptor agonist therapy demonstrated modest improvements in subjective symptoms, but limited evidence exists and clinical outcomes remain unclear in advanced stages.",
+    "expected_status": "partially_supported",
+    "category": "neuropathy"
+  },
+  {
+    "id": "sample_005",
+    "claim": "Laparoscopic appendectomy during spaceflight significantly improves astronaut recovery times compared to terrestrial procedures.",
+    "passage": "Laparoscopic surgical intervention failed to reduce recovery times in microgravity simulations, demonstrated increased risk of complications, and was contraindicated.",
+    "expected_status": "contradicted",
+    "category": "space_surgery"
+  },
+  {
+    "id": "sample_006",
+    "claim": "Aspirin monotherapy is effective and recommended as first-line therapy for reversing acute diabetic nephropathy.",
+    "passage": "Aspirin monotherapy was ineffective for halting renal decline, showed no significant difference compared to placebo, and demonstrated increased risk of bleeding.",
+    "expected_status": "contradicted",
+    "category": "nephrology"
+  },
+  {
+    "id": "sample_007",
+    "claim": "Targeted CRISPR Cas9 therapy cured adult Huntington's disease in human clinical trials.",
+    "passage": "Efficacy of SGLT2 inhibitors was evaluated in a double-blind trial of 4,000 patients with type 2 diabetes and chronic kidney disease.",
+    "expected_status": "unverified",
+    "category": "genetics"
+  },
+  {
+    "id": "sample_008",
+    "claim": "Bariatric surgery reliably reverses advanced Alzheimer's disease pathology.",
+    "passage": "Weight loss outcomes following Roux-en-Y gastric bypass demonstrated sustained BMI reduction over five years of post-operative follow-up.",
+    "expected_status": "unverified",
+    "category": "neurology"
+  }
+]
