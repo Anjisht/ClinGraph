@@ -11,13 +11,34 @@ Features:
 """
 
 import json
+import sys
 from pathlib import Path
 
-import streamlit as st
+# Fix Streamlit path collision: Streamlit prepends frontend/ to sys.path[0].
+# Since this script is named app.py, Python's import system resolves 'import app'
+# to this file rather than the root 'app' package. Ensure repo root takes precedence
+# and remove frontend/ from sys.path.
+_frontend_dir = str(Path(__file__).resolve().parent)
+_repo_root = str(Path(__file__).resolve().parent.parent)
 
-from app.auth.demo_users import SEEDED_DEMO_USERS
-from app.auth.tokens import create_jwt_token
-from app.core.config import Settings
+if _frontend_dir in sys.path:
+    sys.path.remove(_frontend_dir)
+if _repo_root not in sys.path:
+    sys.path.insert(0, _repo_root)
+else:
+    sys.path.remove(_repo_root)
+    sys.path.insert(0, _repo_root)
+
+# If 'app' was registered in sys.modules as a single-file module from this script,
+# clear it so 'from app...' resolves to the project's root 'app' package.
+if "app" in sys.modules and not hasattr(sys.modules["app"], "__path__"):
+    del sys.modules["app"]
+
+import streamlit as st  # noqa: E402
+
+from app.auth.demo_users import SEEDED_DEMO_USERS  # noqa: E402
+from app.auth.tokens import create_jwt_token  # noqa: E402
+from app.core.config import Settings  # noqa: E402
 
 
 def get_active_settings() -> Settings:
