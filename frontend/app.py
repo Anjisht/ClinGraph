@@ -41,10 +41,25 @@ from app.auth.tokens import create_jwt_token  # noqa: E402
 from app.core.config import Settings  # noqa: E402
 
 
+def is_ollama_available() -> bool:
+    """Check if local Ollama daemon is reachable on localhost:11434."""
+    import httpx
+
+    try:
+        with httpx.Client(timeout=0.3) as client:
+            resp = client.get("http://localhost:11434/api/tags")
+            return resp.status_code == 200
+    except Exception:
+        return False
+
+
 def get_active_settings() -> Settings:
+    provider = st.session_state.get("model_provider", "fake")
     return Settings(
         APP_ENV="development",
         DEV_TOKEN_ENABLED=True,
+        SMALL_MODEL_PROVIDER=provider,
+        LARGE_MODEL_PROVIDER=provider,
         SEMANTIC_CACHE_ENABLED=st.session_state.get("enable_cache", True)
         if "enable_cache" in st.session_state
         else True,
@@ -65,17 +80,22 @@ def execute_query_backend(query_text: str, token: str, settings: Settings, top_k
     """Execute authenticated query via direct FastAPI test client or HTTP."""
     from fastapi.testclient import TestClient
 
+    from app.core.config import get_settings
     from app.main import app
 
-    client = TestClient(app)
-    headers = {"Authorization": f"Bearer {token}"}
-    payload = {
-        "query": query_text,
-        "top_k": top_k,
-        "use_reranker": True,
-        "use_graph": settings.GRAPH_RETRIEVAL_ENABLED,
-    }
-    return client.post("/api/query", headers=headers, json=payload)
+    app.dependency_overrides[get_settings] = lambda: settings
+    try:
+        client = TestClient(app)
+        headers = {"Authorization": f"Bearer {token}"}
+        payload = {
+            "query": query_text,
+            "top_k": top_k,
+            "use_reranker": True,
+            "use_graph": settings.GRAPH_RETRIEVAL_ENABLED,
+        }
+        return client.post("/api/query", headers=headers, json=payload)
+    finally:
+        app.dependency_overrides.pop(get_settings, None)
 
 
 def fetch_system_metrics(token: str):
@@ -196,6 +216,37 @@ def render_ui():
 
         st.markdown("---")
         st.markdown("#### ⚙️ **Retrieval & Inference Options**")
+
+        ollama_online = is_ollama_available()
+        provider_options = ["fake", "ollama"]
+        provider_labels = {
+            "fake": "Deterministic Mock (Zero Dependency)",
+            "ollama": f"Local Ollama ({'Online ✅' if ollama_online else 'Offline ⚠️'})",
+        }
+        current_choice = st.session_state.get("model_provider")
+        if current_choice in provider_options:
+            default_idx = provider_options.index(current_choice)
+        else:
+            default_idx = 1 if ollama_online else 0
+
+        selected_provider = st.selectbox(
+            "Model Provider Profile",
+            options=provider_options,
+            index=default_idx,
+            format_func=lambda p: provider_labels.get(p, p),
+            help=(
+                "Select 'Deterministic Mock' for instant testing without external servers, "
+                "or 'Local Ollama' if running Ollama locally."
+            ),
+        )
+        st.session_state["model_provider"] = selected_provider
+
+        if selected_provider == "ollama" and not ollama_online:
+            st.warning(
+                "⚠️ Local Ollama is unreachable on `localhost:11434`. Start Ollama with "
+                "`ollama run llama3.2:3b` or switch to 'Deterministic Mock'."
+            )
+
         st.session_state["enable_graph"] = st.checkbox(
             "GraphRAG Traversal",
             value=False,
@@ -386,6 +437,17 @@ def render_ui():
                             "medical_disclaimer": data.get("disclaimer"),
                         }
                     )
+            elif resp.status_code == 503 and "Ollama" in resp.text:
+                st.error(
+                    "⚠️ **Ollama Server Unavailable (HTTP 503)**\n\n"
+                    f"**Details:** `{resp.text}`\n\n"
+                    "**How to Fix:**\n"
+                    "- **Zero-Dependency Demo:** In the left sidebar under "
+                    "**Retrieval & Inference Options**, switch **Model Provider Profile** "
+                    "to **`Deterministic Mock (Zero Dependency)`**.\n"
+                    "- **Local Ollama:** Ensure Ollama is running (`ollama serve` or "
+                    "`ollama run llama3.2:3b`)."
+                )
             else:
                 st.error(f"Error {resp.status_code}: {resp.text}")
 
